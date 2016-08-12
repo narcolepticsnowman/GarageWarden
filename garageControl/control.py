@@ -34,7 +34,7 @@ class ControlView(View):
             return HttpResponse("Door is currently operating. Please try again later", status=503)
 
         changed = False
-        if should_be_open and is_full_closed or not should_be_open and is_full_open:
+        if should_be_open and not is_full_open or should_be_open and not is_full_open:
             trigger_door()
             changed = True
         return JsonResponse({"changed": changed})
