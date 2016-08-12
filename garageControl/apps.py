@@ -12,6 +12,7 @@ class GarageControlConfig(AppConfig):
     def ready(self):
         if not self.is_ready:
             self.is_ready = True
+            GPIO.cleanup()
             signal.signal(signal.SIGINT, GPIO.cleanup)
             GPIO.setmode(GPIO.BCM)
             GPIO.setup(settings.GARAGE_RELAY_PIN, GPIO.OUT)

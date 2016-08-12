@@ -46,7 +46,7 @@ def trigger_door():
     pass
 
 
-def update_last_contact():
+def update_last_contact(channel):
     global last_contact
     last_contact = datetime.now()
     logging.info("updated last contact to:"+last_contact.strftime("%d-%b-%Y %H:%M:%S"))
