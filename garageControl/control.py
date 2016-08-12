@@ -26,8 +26,8 @@ class ControlView(View):
         if not isinstance(should_be_open, bool):
             return self.make_bad_request("The \"open\" property can only be True or False")
 
-        is_full_closed = status.garage_is_full_open()
-        is_full_open = status.garage_is_full_close()
+        is_full_open = status.garage_is_full_open()
+        is_full_closed = status.garage_is_full_close()
         request_time = datetime.now()
         elapsed = (request_time - last_contact).total_seconds()
         if not is_full_open and not is_full_closed and elapsed < settings.MIN_TIME_BETWEEN_REQUESTS:
