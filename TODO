@@ -1,0 +1,8 @@
+Create UI to interact with garage door
+Add Authentication to end points
+Add Authentication to UI
+Add push notification to phone/hangouts/email something to alert when garage door opens or closes
+Add timer function to shut garage if left in open state for too long
+Add notification that door will close in 30 seconds when auto closing
+Add ability to enable/disable timer
+Add UI to change time to shut garage when left open
