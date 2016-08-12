@@ -2,6 +2,7 @@ from django.apps import AppConfig
 from GarageWarden import settings
 import signal
 from . import control
+import RPi.GPIO as GPIO
 
 
 class GarageControlConfig(AppConfig):
