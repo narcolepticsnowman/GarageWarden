@@ -5,8 +5,9 @@ from django.http import HttpResponse, JsonResponse
 from datetime import datetime, timedelta
 import json
 from . import status
+from GarageWarden import settings
+import logging
 
-min_time_between_requests = 120
 last_contact = datetime.now()
 
 
@@ -25,14 +26,15 @@ class ControlView(View):
 
         is_full_closed = status.garage_is_full_open()
         is_full_open = status.garage_is_full_close()
-
-        if not is_full_open and not is_full_closed:
+        request_time = datetime.now()
+        seconds_since_last_request = (request_time - last_contact).total_seconds()
+        if not is_full_open and not is_full_closed or seconds_since_last_request < settings.MIN_TIME_BETWEEN_REQUESTS:
             return HttpResponse("Door is currently operating. Please try again later", status=503)
 
         changed=False
         if should_be_open and is_full_closed or not should_be_open and is_full_open:
-            # trigger_door
-            changed=True
+            trigger_door()
+            changed = True
         return JsonResponse({"changed": changed})
 
     def make_bad_request(self, error):
@@ -42,3 +44,9 @@ class ControlView(View):
 def trigger_door():
     # close the relay temporarily then re-open it to trigger the door to close
     pass
+
+
+def update_last_contact():
+    global last_contact
+    last_contact = datetime.now()
+    logging.info("updated last contact to:"+last_contact.strftime("%d-%b-%Y %H:%M:%S"))

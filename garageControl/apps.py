@@ -1,9 +1,22 @@
 from django.apps import AppConfig
+from GarageWarden import settings
+import signal
+from . import control
 
 
 class GarageControlConfig(AppConfig):
     name = 'garageControl'
     is_ready = False
+
     def ready(self):
         if not self.is_ready:
-            is_ready = True
+            self.is_ready = True
+            signal.signal(signal.SIGINT, GPIO.cleanup)
+            GPIO.setmode(GPIO.BCM)
+            GPIO.setup(settings.GARAGE_RELAY_PIN, GPIO.OUT)
+            GPIO.setup(settings.FULL_CLOSE_SWITCH_PIN, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+            GPIO.setup(settings.FULL_OPEN_SWITCH_PIN, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+            GPIO.add_event_detect(settings.FULL_CLOSE_SWITCH_PIN, GPIO.RISING, callback=control.update_last_contact,
+                                  bouncetime=200)
+            GPIO.add_event_detect(settings.FULL_OPEN_SWITCH_PIN, GPIO.RISING, callback=control.update_last_contact,
+                                  bouncetime=200)

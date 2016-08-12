@@ -120,3 +120,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# settings for garage control
+MIN_TIME_BETWEEN_REQUESTS = 120
+GARAGE_RELAY_PIN = 24
+FULL_CLOSE_SWITCH_PIN = 23
+FULL_OPEN_SWITCH_PIN = 22

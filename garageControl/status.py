@@ -1,6 +1,7 @@
 from django.http import JsonResponse
 from django.views import View
-
+import RPi.GPIO as GPIO
+from GarageWarden import settings
 
 class StatusView(View):
     def get(self, request):
@@ -8,8 +9,8 @@ class StatusView(View):
 
 
 def garage_is_full_open():
-    return True
+    return GPIO.input(settings.FULL_OPEN_SWITCH_PIN)
 
 
 def garage_is_full_close():
-    return False
+    return GPIO.input(settings.FULL_CLOSE_SWITCH_PIN)
