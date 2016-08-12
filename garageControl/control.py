@@ -6,7 +6,6 @@ from datetime import datetime, timedelta
 import json
 from . import status
 from GarageWarden import settings
-import logging
 import RPi.GPIO as GPIO
 import time
 
@@ -30,11 +29,11 @@ class ControlView(View):
         is_full_closed = status.garage_is_full_open()
         is_full_open = status.garage_is_full_close()
         request_time = datetime.now()
-        seconds_since_last_request = (request_time - last_contact).total_seconds()
-        if not is_full_open and not is_full_closed or seconds_since_last_request < settings.MIN_TIME_BETWEEN_REQUESTS:
+        elapsed = (request_time - last_contact).total_seconds()
+        if not is_full_open and not is_full_closed and elapsed < settings.MIN_TIME_BETWEEN_REQUESTS:
             return HttpResponse("Door is currently operating. Please try again later", status=503)
 
-        changed=False
+        changed = False
         if should_be_open and is_full_closed or not should_be_open and is_full_open:
             trigger_door()
             changed = True
