@@ -36,10 +36,10 @@ class ControlView(View):
         if not is_full_open and not is_full_closed and time_since_last_contact < settings.DOOR_OPERATING_TIME \
                 or time_since_last_request < settings.REQUEST_DEBOUNCE:
             return HttpResponse("Door is currently operating. Please try again later", status=503)
-        last_request = request_time
         changed = False
         if should_be_open and not is_full_open or not should_be_open and not is_full_closed:
             trigger_door()
+            last_request = request_time
             changed = True
         return JsonResponse({"changed": changed})
 
