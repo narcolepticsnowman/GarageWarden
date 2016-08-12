@@ -2,7 +2,7 @@ from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from django.http import HttpResponse, JsonResponse
-from datetime import datetime
+from datetime import datetime, timedelta
 import json
 from . import status
 from GarageWarden import settings
@@ -10,7 +10,8 @@ import logging
 import RPi.GPIO as GPIO
 import time
 
-last_contact = datetime.now()
+# init this to now minus the needed time so the requests work as soon as the system starts up
+last_contact = datetime.now() - timedelta(seconds=settings.MIN_TIME_BETWEEN_REQUESTS)
 
 
 @method_decorator(csrf_exempt, name='dispatch')
@@ -45,9 +46,9 @@ class ControlView(View):
 
 def trigger_door():
     # close the relay temporarily then re-open it to trigger the door to close
-    GPIO.input(settings.GARAGE_RELAY_PIN, True)
+    GPIO.output(settings.GARAGE_RELAY_PIN, True)
     time.sleep(settings.GARAGE_RELAY_TRIGGER_LENGTH)
-    GPIO.input(settings.GARAGE_RELAY_PIN, False)
+    GPIO.output(settings.GARAGE_RELAY_PIN, False)
     pass
 
 
