@@ -3,7 +3,7 @@ app.controller('statusController', ['$scope','$http', function($scope,$http){
     $scope.garageFullOpen = null;
     $scope.garageFullClose = null;
 
-    $http.get("http://127.0.0.1:8000/garage/status").then(function(response){
+    $http.get("http://10.1.1.16:8000/garage/status").then(function(response){
         $scope.garageFullClose = response.data.garageFullClose;
         $scope.garageFullOpen = response.data.garageFullOpen;
     });
