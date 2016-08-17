@@ -1,12 +1,13 @@
-from django.apps import AppConfig
-from GarageWarden import settings
-import signal
-from . import control
 import RPi.GPIO as GPIO
+import signal
+
+from django.apps import AppConfig
+
+from GarageWarden import settings, control
 
 
-class GarageControlConfig(AppConfig):
-    name = 'garageControl'
+class Config(AppConfig):
+    name = 'GarageWarden'
     is_ready = False
 
     def ready(self):

@@ -1,13 +1,14 @@
-from django.views.generic import View
-from django.views.decorators.csrf import csrf_exempt
-from django.utils.decorators import method_decorator
-from django.http import HttpResponse, JsonResponse
-from datetime import datetime, timedelta
-import json
-from . import status
-from GarageWarden import settings
 import RPi.GPIO as GPIO
+import json
 import time
+from datetime import datetime, timedelta
+
+from django.http import HttpResponse, JsonResponse
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
+from django.views.generic import View
+
+from GarageWarden import settings, status
 
 # init this to now minus the needed time so the requests work as soon as the system starts up
 last_contact = datetime.now() - timedelta(seconds=settings.DOOR_OPERATING_TIME)
