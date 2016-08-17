@@ -1,5 +1,5 @@
 from django.http import JsonResponse
-from django.views import View
+from django.views.generic import View
 import RPi.GPIO as GPIO
 from GarageWarden import settings
 
