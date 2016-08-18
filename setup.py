@@ -1,8 +1,7 @@
 import pip
-from pathlib import Path
 import os
 
-pip.main(['install', '-r', str(Path("requirements.txt").resolve())])
+pip.main(['install', '-r', str(os.path.abspath("requirements.txt"))])
 
 from django.core.management import execute_from_command_line
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "GarageWarden.settings")
