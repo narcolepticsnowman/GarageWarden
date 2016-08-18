@@ -1,0 +1,12 @@
+<form ng-submit="submit()">
+    <div class="form-group">
+        <input class="form-control" type="text" ng-model="username" placeholder="Username">
+    </div>
+    <div class="form-group">
+        <input class="form-control" type="password" ng-model="password" placeholder="Password">
+    </div>
+    <div class="alert alert-danger" ng-if="error">
+        {{ error }}
+    </div>
+    <input class="btn btn-success" type="submit" value="Log In">
+</form>

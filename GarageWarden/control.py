@@ -15,9 +15,10 @@ last_contact = datetime.now() - timedelta(seconds=settings.DOOR_OPERATING_TIME)
 last_request = datetime.now() - timedelta(seconds=settings.REQUEST_DEBOUNCE)
 
 
-@method_decorator(csrf_exempt, name='dispatch')
 class ControlView(View):
     def post(self, request):
+        if not request.user.is_authenticated:
+            return HttpResponse("Not logged in", status=401)
         global last_request, last_contact
         if request.body is None or len(request.body) < 1:
             return HttpResponse("A request body is required", status=400)

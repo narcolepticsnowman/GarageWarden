@@ -1,0 +1,26 @@
+<div ng-if="user.loggedIn" >
+    <div class="row">
+        <div class="col-xs-6 text-center">
+            <h2>Status:</h2>
+        </div>
+        <div class="col-xs-6 text-left" ng-switch on="garageStatus">
+            <h2 ng-switch-when="open">
+                <span class="label label-warning">Open</span>
+            </h2>
+            <h2 ng-switch-when="closed">
+                <span class="label label-success">Closed</span>
+            </h2>
+            <h2 ng-switch-when="operating" id="operating" ng-hide="showOperating">
+                <span class="label label-info">Operating</span>
+            </h2>
+            <h2 ng-switch-when="unknown">
+                <span class="label label-default">Loading...</span>
+            </h2>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12 activate-button-wrapper">
+            <button type="button" class="btn btn-primary btn-lg activate-button">{{ activateButtonText }}</button>
+        </div>
+    </div>
+</div>

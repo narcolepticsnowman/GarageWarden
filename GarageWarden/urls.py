@@ -17,9 +17,13 @@ from django.conf.urls import url
 from django.contrib import admin
 from GarageWarden.status import StatusView
 from GarageWarden.control import ControlView
+from GarageWarden.login import LoginView
+from GarageWarden.logout import LogOutView
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'garage/status', StatusView.as_view()),
-    url(r'garage/control', ControlView.as_view()),
+    url(r'^api/garage/status', StatusView.as_view()),
+    url(r'^api/garage/control', ControlView.as_view()),
+    url(r'^api/login', LoginView.as_view()),
+    url(r'^api/logout', LogOutView.as_view())
 ]

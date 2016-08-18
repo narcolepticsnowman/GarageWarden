@@ -1,0 +1,23 @@
+.gw-header{
+    text-align: center;
+    position: relative;
+}
+
+.activate-button-wrapper{
+    margin-top: 50px;
+    text-align: center;
+}
+
+.logoutbutton{
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+.activate-button{
+    width: 90%;
+}
+
+.gw-main {
+    margin: 100px auto;
+}
