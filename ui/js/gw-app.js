@@ -1,29 +1,61 @@
 var app = angular.module('garage-warden', ['ngRoute']);
-app.controller('mainController', ['$scope','$http','$interval', function($scope, $http, $interval){
+app.controller('mainController', ['$scope','$http','$interval', '$timeout', function($scope, $http, $interval, $timeout){
     $scope.garageFullOpen = null;
     $scope.garageFullClose = null;
     $scope.garageStatus = "unknown";
     $scope.showOperating=true;
     $scope.activateButtonText="Activate Garage";
+    $scope.error = null;
+    $scope.warning = null;
+    $scope.stopStatusMonitor = undefined;
+
+    function monitorStatus(time){
+        $scope.stopStatusMonitor = $interval($scope.updateStatus, time);
+    }
+
+    function stopMonitorStatus(){
+        if(angular.isDefined($scope.stopStatusMonitor)){
+            $interval.cancel($scope.stopStatusMonitor);
+            $scope.stopStatusMonitor=undefined;
+        }
+    }
+
     $scope.updateStatus = function(){
         if($scope.user.loggedIn) {
             $http.get("/api/garage/status").then(function (response) {
                 $scope.garageFullClose = response.data.garageFullClose;
                 $scope.garageFullOpen = response.data.garageFullOpen;
-
+                stopMonitorStatus();
                 if ($scope.garageFullClose) {
                     $scope.garageStatus = "closed";
                     $scope.activateButtonText = "Open Garage";
+                    monitorStatus(3000);
                 } else if ($scope.garageFullOpen) {
                     $scope.garageStatus = "open";
                     $scope.activateButtonText = "Close Garage";
+                    monitorStatus(3000);
                 } else {
                     $scope.garageStatus = "operating";
                     $scope.activateButtonText = "Activate Garage";
+                    monitorStatus(500);
                 }
 
             });
         }
+    };
+
+    $scope.activateGarage = function(){
+        $scope.warning=null;
+        $scope.error=null;
+        $http.post("/api/garage/control", {open: $scope.garageFullClose ? true : false}).then(function(response){
+            if(response.data.changed === true){
+                $timeout($scope.updateStatus, 1000);
+            } else {
+                $scope.warning = "Garage state not changed. It was either already in the state requested or currently operating.";
+            }
+        }, function(response){
+            $scope.error=response.data;
+        });
     };
 
     $scope.$watch('user', function(newUser){
@@ -33,16 +65,11 @@ app.controller('mainController', ['$scope','$http','$interval', function($scope,
     }, true);
 
 
-
-    var stopUpdate = $interval($scope.updateStatus, 1000);
     var stopOperatingBlink = $interval(function(){
         $scope.showOperating = !$scope.showOperating;
     }, 400);
     $scope.destroy = function(){
-        if(angular.isDefined(stopUpdate)){
-            $interval.cancel(stopUpdate);
-            stopUpdate=undefined;
-        }
+        stopMonitorStatus();
         if(angular.isDefined(stopOperatingBlink)){
             $interval.cancel(stopOperatingBlink);
             stopOperatingBlink = undefined;

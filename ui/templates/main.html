@@ -1,7 +1,7 @@
 <div ng-if="user.loggedIn" >
     <div class="row">
         <div class="col-xs-6 text-center">
-            <h2>Status:</h2>
+            <h2>Garage Is:</h2>
         </div>
         <div class="col-xs-6 text-left" ng-switch on="garageStatus">
             <h2 ng-switch-when="open">
@@ -20,7 +20,28 @@
     </div>
     <div class="row">
         <div class="col-xs-12 activate-button-wrapper">
-            <button type="button" class="btn btn-primary btn-lg activate-button">{{ activateButtonText }}</button>
+            <button type="button" class="btn btn-primary btn-lg activate-button" ng-click="activateGarage()">
+                {{ activateButtonText }}
+            </button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="alert alert-warning" ng-if="warning">{{ warning }}</div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="alert alert-danger" ng-if="error">{{ error }}</div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="alert alert-info" ng-if="garageStatus == 'operating'">
+                You can try and activate the garage while it's operating, but it may not do anything. This is allowed
+                because some garage doors have a feature that will let you stop the garage between fully open and fully
+                closed, and disabling this would mean you could never close the garage again.
+            </div>
         </div>
     </div>
 </div>
