@@ -12,8 +12,8 @@ class StatusView(View):
 
 
 def garage_is_full_open():
-    return 1 == GPIO.input(settings.FULL_OPEN_SWITCH_PIN)
+    return 0 == GPIO.input(settings.FULL_OPEN_SWITCH_PIN)
 
 
 def garage_is_full_close():
-    return 1 == GPIO.input(settings.FULL_CLOSE_SWITCH_PIN)
+    return 0 == GPIO.input(settings.FULL_CLOSE_SWITCH_PIN)
