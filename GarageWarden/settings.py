@@ -119,12 +119,9 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-# settings for garage control
-# This will tell the controller the min time to wait for the door to go from full open to full close
-DOOR_OPERATING_TIME = 120
-# This will tell the controller the min time to wait between requests for activating the door. This will make sure the
-# switch actually disconnects before the next request comes in
-REQUEST_DEBOUNCE = 3
+# This will tell the controller the min time in seconds to wait between requests for activating the door.
+# This is merely a precaution to make sure the door doesn't get too many activations too fast
+REQUEST_DEBOUNCE = 1
 # The GPIO pin to use to control the garage door control relay (Broadcom number)
 GARAGE_RELAY_PIN = 24
 # The GPIO pin to use for the switch that is closed when the door is closed completely (Broadcom number)

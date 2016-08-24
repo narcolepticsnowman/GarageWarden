@@ -2,16 +2,12 @@ import RPi.GPIO as GPIO
 import json
 import time
 from datetime import datetime, timedelta
-
 from django.http import HttpResponse, JsonResponse
-from django.utils.decorators import method_decorator
-from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import View
 
 from GarageWarden import settings, status
 
 # init this to now minus the needed time so the requests work as soon as the system starts up
-last_contact = datetime.now() - timedelta(seconds=settings.DOOR_OPERATING_TIME)
 last_request = datetime.now() - timedelta(seconds=settings.REQUEST_DEBOUNCE)
 
 
@@ -19,7 +15,7 @@ class ControlView(View):
     def post(self, request):
         if not request.user.is_authenticated:
             return HttpResponse("Not logged in", status=401)
-        global last_request, last_contact
+        global last_request
         if request.body is None or len(request.body) < 1:
             return HttpResponse("A request body is required", status=400)
         data = json.loads(request.body.decode('utf-8'))
@@ -33,11 +29,10 @@ class ControlView(View):
         is_full_open = status.garage_is_full_open()
         is_full_closed = status.garage_is_full_close()
         request_time = datetime.now()
-        time_since_last_contact = (request_time - last_contact).total_seconds()
+
         time_since_last_request = (request_time - last_request).total_seconds()
-        if not is_full_open and not is_full_closed and time_since_last_contact < settings.DOOR_OPERATING_TIME \
-                or time_since_last_request < settings.REQUEST_DEBOUNCE:
-            return HttpResponse("Door is currently operating. Please try again later", status=503)
+        if time_since_last_request < settings.REQUEST_DEBOUNCE:
+            return HttpResponse("Too many request, try again in a few seconds", status=503)
         changed = False
         if should_be_open and not is_full_open or not should_be_open and not is_full_closed:
             trigger_door()
@@ -55,9 +50,3 @@ def trigger_door():
     time.sleep(settings.GARAGE_RELAY_TRIGGER_LENGTH)
     GPIO.output(settings.GARAGE_RELAY_PIN, False)
     pass
-
-
-def update_last_contact(channel):
-    global last_contact
-    last_contact = datetime.now()
-    print("updated last contact to:"+last_contact.strftime("%d-%b-%Y %H:%M:%S"))
