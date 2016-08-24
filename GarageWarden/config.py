@@ -22,7 +22,6 @@ class Config(AppConfig):
                                   bouncetime=200)
             GPIO.add_event_detect(settings.FULL_OPEN_SWITCH_PIN, GPIO.BOTH, callback=notify.state_change_notify,
                                   bouncetime=200)
-            notify.init_state()
 
 
 def cleanup_gpio(signal, frame):
