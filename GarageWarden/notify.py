@@ -82,8 +82,13 @@ def make_text(state, date):
     return "Garage was " + state + " at " + date
 
 
-was_open = status.garage_is_full_open()
-was_closed = status.garage_is_full_close()
+was_open = False
+was_closed = False
+
+
+def init_state():
+    was_open = status.garage_is_full_open()
+    was_closed = status.garage_is_full_close()
 
 
 def state_change_notify(channel):
