@@ -82,28 +82,12 @@ def make_text(state, date):
     return "Garage was " + state + " at " + date
 
 
-was_open = False
-was_closed = False
-
-
-def init_state():
-    global was_closed, was_open
-    was_open = status.garage_is_full_open()
-    was_closed = status.garage_is_full_close()
-
-
 def state_change_notify(channel):
-    global was_open, was_closed
     now = datetime.now()
     now_str = now.strftime("%d-%b-%Y %H:%M:%S")
     print("State changed on channel:" + channel + " at" + now_str)
-    is_closed = status.garage_is_full_close()
-    is_open = status.garage_is_full_open()
 
-    if is_open and was_closed:
+    if status.garage_is_full_open():
         send_mail("Opened", "#f0ad4e", now_str)
-    elif is_closed and was_open:
+    elif status.garage_is_full_close():
         send_mail("Closed", "#5cb85c", now_str)
-
-    was_closed = is_closed
-    was_open = is_open
