@@ -24,7 +24,7 @@ Once all that's set up, when you start up caddy, it will automatically create va
 Now that it's all configured, you need to start gunicorn, then start caddy.
 cd into the GarageWarden folder (the folder the setup.py script is in)
 then run:
-    nohup python3 -m gunicorn GarageWarden.wsgi >> $HOME/gunicorn.log 2>&1 &
+    nohup python3 $(which gunicorn) GarageWarden.wsgi >> $HOME/gunicorn.log 2>&1 &
 
 this will start gunicorn in the background and write all output to the file $HOME/gunicorn.log
 

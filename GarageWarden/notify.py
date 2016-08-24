@@ -87,6 +87,7 @@ was_closed = False
 
 
 def init_state():
+    global was_closed, was_open
     was_open = status.garage_is_full_open()
     was_closed = status.garage_is_full_close()
 
