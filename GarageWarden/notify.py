@@ -85,7 +85,7 @@ def make_text(state, date):
 def state_change_notify(channel):
     now = datetime.now()
     now_str = now.strftime("%d-%b-%Y %H:%M:%S")
-    print("State changed on channel:" + channel + " at" + now_str)
+    print("State changed on channel:" + str(channel) + " at" + now_str)
 
     if status.garage_is_full_open():
         send_mail("Opened", "#f0ad4e", now_str)
