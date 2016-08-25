@@ -125,8 +125,10 @@ REQUEST_DEBOUNCE = 1
 # The GPIO pin to use to control the garage door control relay (Broadcom number)
 GARAGE_RELAY_PIN = 24
 # The GPIO pin to use for the switch that is closed when the door is closed completely (Broadcom number)
-FULL_CLOSE_SWITCH_PIN = 23
+# 2 and 3 are used because they have a built in 1.8k pull up resistor which stops the pin from floating when the switch
+# is not closed
+FULL_CLOSE_SWITCH_PIN = 3
 # The GPIO pin to use for the switch that is closed when the door is opened completely (Broadcom number)
-FULL_OPEN_SWITCH_PIN = 22
+FULL_OPEN_SWITCH_PIN = 2
 # The amount of time to keep the relay closed to trigger the garage door to close
 GARAGE_RELAY_TRIGGER_LENGTH = 0.2

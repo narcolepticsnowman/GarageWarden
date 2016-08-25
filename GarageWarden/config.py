@@ -1,5 +1,4 @@
 import RPi.GPIO as GPIO
-import signal
 from django.apps import AppConfig
 from GarageWarden import settings, notify
 
@@ -11,10 +10,8 @@ class Config(AppConfig):
     def ready(self):
         if not self.is_ready:
             self.is_ready = True
-            signal.signal(signal.SIGINT, cleanup_gpio)
             print("Setting up GPIO")
             GPIO.setwarnings(False)
-            GPIO.cleanup()
             GPIO.setmode(GPIO.BCM)
             GPIO.setup(settings.GARAGE_RELAY_PIN, GPIO.OUT)
             GPIO.setup(settings.FULL_CLOSE_SWITCH_PIN, GPIO.IN, pull_up_down=GPIO.PUD_UP)
@@ -25,7 +22,3 @@ class Config(AppConfig):
             GPIO.add_event_detect(settings.FULL_OPEN_SWITCH_PIN, GPIO.BOTH, callback=notify.state_change_notify,
                                   bouncetime=200)
             print("Setup complete")
-
-
-def cleanup_gpio(signal, frame):
-    GPIO.cleanup()
