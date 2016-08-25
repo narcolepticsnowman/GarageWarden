@@ -5,7 +5,7 @@ from datetime import datetime
 from django.http import HttpResponse
 from os.path import dirname, abspath, join
 import configparser
-from GarageWarden import settings
+from GarageWarden import status
 
 
 class InvalidConfigError(Exception):
@@ -84,17 +84,17 @@ def make_text(state, date):
     return "Garage was " + state + " at " + date
 
 
-def switch_closed_notify(channel):
+def state_change():
     now = datetime.now()
     now_str = now.strftime("%d-%b-%Y %H:%M:%S")
-    print("State changed on channel:" + str(channel) + " at" + now_str)
+    opened = status.garage_is_full_open()
+    closed = status.garage_is_full_close()
+    print("State changed to opened: "+str(opened)+" closed: "+str(closed)+" at" + now_str)
 
-    if channel == settings.FULL_OPEN_SWITCH_PIN:
+    if opened:
         send_mail("Opened", "#f0ad4e", now_str)
-    elif channel == settings.FULL_CLOSE_SWITCH_PIN:
+    elif closed:
         send_mail("Closed", "#5cb85c", now_str)
-    else:
-        raise ValueError("wtf is this pin: "+str(channel))
 
 
 def test_email(request):
