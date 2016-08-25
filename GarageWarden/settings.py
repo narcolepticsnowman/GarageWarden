@@ -132,3 +132,8 @@ FULL_CLOSE_SWITCH_PIN = 3
 FULL_OPEN_SWITCH_PIN = 2
 # The amount of time to keep the relay closed to trigger the garage door to close
 GARAGE_RELAY_TRIGGER_LENGTH = 0.2
+# The bounce time to use for events when the door is opened or closed. Too small of a number will cause a bunch of
+# notifications to be sent out erroneously
+SWITCH_PIN_DEBOUNCE_TIME = 2000
+# The default amount of time to wait to automatically close the garage door after it's opened in minutes
+DEFAULT_AUTO_CLOSE_TIME = 20
