@@ -2,6 +2,7 @@ import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from datetime import datetime
+from django.http import HttpResponse
 from os.path import dirname, abspath, join
 import configparser
 from GarageWarden import status
@@ -52,7 +53,8 @@ if enabled:
 
 def send_mail(state, color, date):
     if not enabled:
-        pass
+        print('email not enabled')
+        return
 
     if encryption == 'ssl':
         smtp = smtplib.SMTP_SSL(host=host, port=port)
@@ -71,7 +73,7 @@ def send_mail(state, color, date):
     msg['To'] = ", ".join(recipients)
     msg.attach(MIMEText(make_text(state, date), "plain"))
     msg.attach(MIMEText(make_html(state, color, date), "html"))
-    smtp.sendmail(_from, recipients, msg)
+    smtp.sendmail(_from, recipients, msg.as_string())
 
 
 def make_html(state, color, date):
@@ -91,3 +93,11 @@ def state_change_notify(channel):
         send_mail("Opened", "#f0ad4e", now_str)
     elif status.garage_is_full_close():
         send_mail("Closed", "#5cb85c", now_str)
+
+
+def test_email(request):
+    print('sending test emails')
+    if not enabled:
+        return HttpResponse("Email not enabled")
+    send_mail("Test", "#5bc0de", datetime.now().strftime("%d-%b-%Y %H:%M:%S"))
+    return HttpResponse("Test email sent")
