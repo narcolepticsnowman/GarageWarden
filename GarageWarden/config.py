@@ -18,7 +18,7 @@ class Config(AppConfig):
             GPIO.setup(settings.FULL_OPEN_SWITCH_PIN, GPIO.IN, pull_up_down=GPIO.PUD_UP)
             print("Adding callbacks for notification")
             GPIO.add_event_detect(settings.FULL_CLOSE_SWITCH_PIN, GPIO.BOTH, callback=notify.state_change_notify,
-                                  bouncetime=200)
+                                  bouncetime=2000)
             GPIO.add_event_detect(settings.FULL_OPEN_SWITCH_PIN, GPIO.BOTH, callback=notify.state_change_notify,
-                                  bouncetime=200)
+                                  bouncetime=2000)
             print("Setup complete")
