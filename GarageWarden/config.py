@@ -30,5 +30,5 @@ class Config(AppConfig):
         # state of the switches
         print("Event detected for channel: " + str(channel) + ". Starting timers for listeners.")
         wait_time = settings.SWITCH_PIN_DEBOUNCE_TIME / 1000
-        Timer(wait_time, notify.state_change)
-        Timer(wait_time, autoclose.state_change)
+        Timer(wait_time, notify.state_change).start()
+        Timer(wait_time, autoclose.state_change).start()
