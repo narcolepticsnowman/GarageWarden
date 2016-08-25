@@ -22,8 +22,4 @@ class Config(AppConfig):
                                   bouncetime=settings.SWITCH_PIN_DEBOUNCE_TIME)
             GPIO.add_event_detect(settings.FULL_OPEN_SWITCH_PIN, GPIO.FALLING, callback=notify.switch_closed_notify,
                                   bouncetime=settings.SWITCH_PIN_DEBOUNCE_TIME)
-            # For auto close, we only want to detect a rising edge and only for the close pin
-            # The open pin is irrelevant because as long as the close switch is not active, the garage is not full close
-            GPIO.add_event_detect(settings.FULL_CLOSE_SWITCH_PIN, GPIO.RISING, callback=autoclose.un_close_detected,
-                                  bouncetime=settings.SWITCH_PIN_DEBOUNCE_TIME)
             print("Setup complete")
