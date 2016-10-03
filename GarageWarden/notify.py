@@ -26,6 +26,8 @@ except Exception:
 
 if enabled:
     host = config['host']
+    autoclose_email_enabled = config.getboolean('autoclose_email_enabled')
+    status_email_enabled = config.getboolean('status_email_enabled')
     encryption = (config['encryption'] or '').lower()
     username = config['username']
     password = config['password']
@@ -51,7 +53,7 @@ if enabled:
         raise InvalidConfigError('No mail recipients set, or recipients is invalid')
 
 
-def send_mail(state, color, date):
+def send_mail(subject, text, html=None):
     if not enabled:
         print('email not enabled')
         return
@@ -68,12 +70,21 @@ def send_mail(state, color, date):
         smtp.login(username, password)
 
     msg = MIMEMultipart("alternative")
-    msg['Subject'] = "Garage " + state
+    msg['Subject'] = subject
     msg['From'] = _from
     msg['To'] = ", ".join(recipients)
-    msg.attach(MIMEText(make_text(state, date), "plain"))
-    msg.attach(MIMEText(make_html(state, color, date), "html"))
+    if text:
+        msg.attach(MIMEText(text, "plain"))
+    if html:
+        msg.attach(MIMEText(html, "html"))
     smtp.sendmail(_from, recipients, msg.as_string())
+
+
+def send_state_change_mail(state, color, date):
+    if status_email_enabled:
+        send_mail("Garage " + state, make_text(state, date), make_html(state, color, date))
+    else:
+        print('status emails not enabled')
 
 
 def make_html(state, color, date):
@@ -92,14 +103,14 @@ def state_change():
     print("State changed to opened: "+str(opened)+" closed: "+str(closed)+" at" + now_str)
 
     if opened:
-        send_mail("Opened", "#f0ad4e", now_str)
+        send_state_change_mail("Opened", "#f0ad4e", now_str)
     elif closed:
-        send_mail("Closed", "#5cb85c", now_str)
+        send_state_change_mail("Closed", "#5cb85c", now_str)
 
 
 def test_email(request):
     print('sending test emails')
     if not enabled:
         return HttpResponse("Email not enabled")
-    send_mail("Test", "#5bc0de", datetime.now().strftime("%d-%b-%Y %H:%M:%S"))
+    send_state_change_mail("Test", "#5bc0de", datetime.now().strftime("%d-%b-%Y %H:%M:%S"))
     return HttpResponse("Test email sent")
