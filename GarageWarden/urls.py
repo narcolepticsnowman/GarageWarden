@@ -20,6 +20,7 @@ from GarageWarden.control import ControlView
 from GarageWarden.login import LoginView
 from GarageWarden.logout import LogOutView
 from GarageWarden.notify import test_email
+from GarageWarden.settingView import SettingView
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
@@ -27,5 +28,6 @@ urlpatterns = [
     url(r'^api/garage/control', ControlView.as_view()),
     url(r'^api/login', LoginView.as_view()),
     url(r'^api/logout', LogOutView.as_view()),
+    url(r'^api/setting', SettingView.as_view()),
     url(r'^email/test', test_email)
 ]

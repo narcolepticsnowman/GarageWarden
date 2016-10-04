@@ -91,5 +91,3 @@ ENV/
 .idea
 *.iml
 db.sqlite3
-#ignored so people don't accidentally commit passwords
-mailconfig.ini

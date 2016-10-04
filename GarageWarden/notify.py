@@ -3,61 +3,26 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from datetime import datetime
 from django.http import HttpResponse
-from os.path import dirname, abspath, join
-import configparser
-from GarageWarden import status
+from GarageWarden import status, settingHelper, settingView, config
+
+settings = settingHelper.values_for_prefix("email")
 
 
-class InvalidConfigError(Exception):
-    pass
+def reload_config():
+    global settings
+    settings = settingHelper.values_for_prefix("email")
 
 
-# Get the path of this file, then get the directory from it, then the parent directory, then look for the file there
-mailconfig_path = join(dirname(dirname(abspath(__file__))), 'mailconfig.ini')
-__parser = configparser.ConfigParser()
-__parser.read(mailconfig_path)
-config = __parser['mail']
-
-try:
-    enabled = config.getboolean('enabled')
-except Exception:
-    raise InvalidConfigError("mail enabled is not a valid config boolean. "
-                             "See https://docs.python.org/3/library/configparser.html#supported-datatypes")
-
-if enabled:
-    host = config['host']
-    autoclose_email_enabled = config.getboolean('autoclose_email_enabled')
-    status_email_enabled = config.getboolean('status_email_enabled')
-    encryption = (config['encryption'] or '').lower()
-    username = config['username']
-    password = config['password']
-    recipients = config['recipients']
-    _from = config['from'] or 'GarageWarden'
-    try:
-        port = config.getint('port')
-    except Exception:
-        raise InvalidConfigError('mail port cannot be empty or is not a number')
-
-    if not config['host']:
-        raise InvalidConfigError('mail host cannot be empty')
-    if not encryption or encryption not in ['ssl', 'tls', 'none']:
-        raise InvalidConfigError("Unknown mail encryption")
-
-    if not recipients:
-        raise InvalidConfigError('no mail recipients set')
-
-    # split the string and dump out any empty strings in case there are any
-    recipients = [email.strip() for email in recipients.split(';') if email]
-
-    if len(config['recipients']) < 1:
-        raise InvalidConfigError('No mail recipients set, or recipients is invalid')
+settingView.reload_methods['notify'] = reload_config
 
 
 def send_mail(subject, text, html=None):
-    if not enabled:
+    if not settings['enabled']:
         print('email not enabled')
         return
-
+    encryption = (settings['encryption'] or '').lower()
+    host = settings['host']
+    port = settings['port']
     if encryption == 'ssl':
         smtp = smtplib.SMTP_SSL(host=host, port=port)
     else:
@@ -66,22 +31,24 @@ def send_mail(subject, text, html=None):
     if encryption == 'tls':
         smtp.starttls()
 
-    if username and password:
-        smtp.login(username, password)
+    if settings['username'] and settings['password']:
+        smtp.login(settings['username'], settings['password'])
 
+    _from = settings['from'] or 'GarageWarden'
+    recipients = settings['recipients']
     msg = MIMEMultipart("alternative")
     msg['Subject'] = subject
     msg['From'] = _from
-    msg['To'] = ", ".join(recipients)
+    msg['To'] = recipients
     if text:
         msg.attach(MIMEText(text, "plain"))
     if html:
         msg.attach(MIMEText(html, "html"))
-    smtp.sendmail(_from, recipients, msg.as_string())
+    smtp.sendmail(_from, [r.strip() for r in recipients.split(',') if r], msg.as_string())
 
 
 def send_state_change_mail(state, color, date):
-    if status_email_enabled:
+    if settings['status_notification_enabled']:
         send_mail("Garage " + state, make_text(state, date), make_html(state, color, date))
     else:
         print('status emails not enabled')
@@ -108,9 +75,12 @@ def state_change():
         send_state_change_mail("Closed", "#5cb85c", now_str)
 
 
+config.state_change_callbacks['notify'] = state_change
+
+
 def test_email(request):
     print('sending test emails')
-    if not enabled:
+    if not settings['enabled']:
         return HttpResponse("Email not enabled")
     send_state_change_mail("Test", "#5bc0de", datetime.now().strftime("%d-%b-%Y %H:%M:%S"))
     return HttpResponse("Test email sent")

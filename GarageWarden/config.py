@@ -1,7 +1,11 @@
 import RPi.GPIO as GPIO
 from django.apps import AppConfig
-from GarageWarden import settings, notify, autoclose
+from GarageWarden import settings
 from threading import Timer
+
+
+# use a dict to prevent duplicated callbacks
+state_change_callbacks = {}
 
 
 class Config(AppConfig):
@@ -30,5 +34,5 @@ class Config(AppConfig):
         # state of the switches
         print("Event detected for channel: " + str(channel) + ". Starting timers for listeners.")
         wait_time = settings.SWITCH_PIN_DEBOUNCE_TIME / 1000
-        Timer(wait_time, notify.state_change).start()
-        Timer(wait_time, autoclose.state_change).start()
+        for m in state_change_callbacks.values():
+            Timer(wait_time, m).start()

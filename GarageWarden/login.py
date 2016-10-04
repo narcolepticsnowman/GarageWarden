@@ -36,3 +36,16 @@ class LoginView(View):
 
     def make_bad_request(self, error):
         return HttpResponse(error, status=400)
+
+
+class AuthorizedMixin:
+    """
+    CBV mixin which verifies that the current user is authenticated.
+    """
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return HttpResponse("Not logged in", status=401)
+        return super(AuthorizedMixin, self).dispatch(request, *args, **kwargs)
+
+    def make_bad_request(self, error):
+        return HttpResponse(error, status=400)

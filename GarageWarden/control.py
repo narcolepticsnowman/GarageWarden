@@ -5,19 +5,17 @@ from datetime import datetime, timedelta
 from django.http import HttpResponse, JsonResponse
 from django.views.generic import View
 
-from GarageWarden import settings, status
+from GarageWarden import settings, status, login
 
 # init this to now minus the needed time so the requests work as soon as the system starts up
 last_request = datetime.now() - timedelta(seconds=settings.REQUEST_DEBOUNCE)
 
 
-class ControlView(View):
+class ControlView(login.AuthorizedMixin, View):
     def post(self, request):
-        if not request.user.is_authenticated:
-            return HttpResponse("Not logged in", status=401)
         global last_request
         if request.body is None or len(request.body) < 1:
-            return HttpResponse("A request body is required", status=400)
+            return self.make_bad_request("A request body is required")
         data = json.loads(request.body.decode('utf-8'))
         if 'open' not in data:
             return self.make_bad_request("You must specify whether the door should be open or not")
@@ -39,9 +37,6 @@ class ControlView(View):
             last_request = request_time
             changed = True
         return JsonResponse({"changed": changed})
-
-    def make_bad_request(self, error):
-        return HttpResponse(error, status=400)
 
 
 def trigger_door():
