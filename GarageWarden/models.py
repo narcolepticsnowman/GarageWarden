@@ -11,6 +11,7 @@ class Setting(models.Model):
     value = models.CharField(max_length=2000)
     description = models.CharField(max_length=2000)
     type = models.CharField(max_length=10, choices=VALUE_TYPES, default="S")
+    order = models.IntegerField(default=0)
 
     def get_value(self):
         if self.type == "B":

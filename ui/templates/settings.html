@@ -1,0 +1,10 @@
+<div ng-if="user.loggedIn" >
+    <button class="btn btn-large btn-success pull-right" ng-click="save()">Save</button>
+    <uib-tabset active="active">
+        <uib-tab ng-repeat="(group, groupSettings) in settings" index="$index" heading="{{ group }}">
+            <div ng-repeat="setting in groupSettings">
+                <setting-form></setting-form>
+            </div>
+        </uib-tab>
+    </uib-tabset>
+</div>

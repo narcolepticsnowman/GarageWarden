@@ -21,6 +21,7 @@ class Migration(migrations.Migration):
                 ('description', models.CharField(max_length=2000)),
                 ('type', models.CharField(choices=[('B', 'Bool'), ('S', 'String'), ('N', 'Number')],
                                           default='S', max_length=10)),
+                ('order', models.IntegerField(default=0)),
             ],
         ),
     ]

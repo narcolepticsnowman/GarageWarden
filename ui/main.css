@@ -10,8 +10,10 @@
 
 .logoutbutton{
     position: absolute;
-    top: 0;
-    right: 0;
+    top: 16px;
+    width: 70px;
+    height: 52px;
+    right: 10px;
 }
 
 .activate-button{
@@ -20,4 +22,30 @@
 
 .gw-main {
     margin: 100px auto;
+}
+
+.setting_checkbox {
+    display: inline-block;
+    width: 32px;
+    height: 32px;
+}
+
+.setting_checkbox_label_bool {
+    vertical-align: middle;
+    height: 40px;
+}
+
+.setting_checkbox_label {
+    white-space: pre-line;
+}
+
+.settings_button {
+    font-size: 4em !important;
+    position: absolute;
+    top: 14px;
+    left: 10px;
+}
+
+.settings_selected {
+    color: #b2d4b7
 }

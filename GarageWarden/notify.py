@@ -5,11 +5,13 @@ from datetime import datetime
 from django.http import HttpResponse
 from GarageWarden import status, settingHelper, settingView, config
 
-settings = settingHelper.values_for_prefix("email")
+settings = None
+settings_loaded = False
 
 
 def reload_config():
-    global settings
+    global settings, settings_loaded
+    settings_loaded = True
     settings = settingHelper.values_for_prefix("email")
 
 
@@ -17,6 +19,8 @@ settingView.reload_methods['notify'] = reload_config
 
 
 def send_mail(subject, text, html=None):
+    if not settings_loaded:
+        reload_config()
     if not settings['enabled']:
         print('email not enabled')
         return

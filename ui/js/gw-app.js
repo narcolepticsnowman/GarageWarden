@@ -1,4 +1,4 @@
-var app = angular.module('garage-warden', ['ngRoute']);
+var app = angular.module('garage-warden', ['ngRoute', 'ui.bootstrap']);
 app.controller('mainController', ['$scope','$http','$interval', '$timeout', function($scope, $http, $interval, $timeout){
     $scope.garageFullOpen = null;
     $scope.garageFullClose = null;
@@ -104,6 +104,61 @@ app.controller('loginController', ['$scope', '$http', '$location',
         )
     }
 }]);
+app.directive('settingForm', [function(){
+    return {
+        templateUrl: "templates/setting_form.html"
+    }
+}]);
+app.controller('settingsController', ['$scope', '$http', function($scope, $http){
+    $scope.settings = null;
+    $scope.failed = false;
+    $scope.error = null;
+    $scope.dirty = {};
+    $http.get("/api/settings").then(function(response){
+        var settings = {};
+        angular.forEach(response.data.settings, function(value){
+            var split = value.key.split(".");
+            var group = split.shift();
+            var name = split.join(".");
+            if( !settings[group] ){
+                settings[group] = [];
+            }
+            value.name = name;
+            settings[group].push(value);
+        });
+        $scope.settings = settings;
+    });
+
+    $scope.$on('$locationChangeStart', function(event){
+        if(Object.keys($scope.dirty).length != 0){
+            if(!confirm("You have unsaved changes, are you sure you want to proceed?")){
+                event.preventDefault();
+            }
+        }
+    });
+
+    $scope.markDirty = function (setting) {
+        $scope.dirty[setting.key] = setting;
+    };
+
+    $scope.save = function(){
+        if(Object.keys($scope.dirty).length == 0){
+            alert("No changes to save!");
+            return;
+        }
+        var settings = [];
+        angular.forEach($scope.dirty, function(value){
+            settings.push(value);
+        });
+        $http.post("/api/settings", settings).then(function(){
+            $scope.dirty = {};
+            $scope.toggleSettings();
+        }, function(response){
+            $scope.failed=true;
+            $scope.error = response.data;
+        });
+    }
+}]);
 app.factory("authInterceptor", ["$location","$q","$rootScope", function($location, $q, $rootScope){
     return {
         "responseError": function (response) {
@@ -127,7 +182,10 @@ app.config(['$routeProvider','$httpProvider',function($routeProvider, $httpProvi
             templateUrl : "templates/login.html",
             controller: "loginController"
         })
-    ;
+        .when("/settings", {
+            templateUrl : "templates/settings.html",
+            controller: "settingsController"
+        });
     $httpProvider.interceptors.push('authInterceptor')
 }]);
 app.run(['$http', '$location', '$rootScope', function($http, $location, $rootScope){
@@ -138,6 +196,20 @@ app.run(['$http', '$location', '$rootScope', function($http, $location, $rootSco
             $rootScope.user.name=null;
             $location.path("/login")
         });
+    };
+    $rootScope.currentPath = function(){return $location.path()};
+    $rootScope.lastPath = $location.path();
+    $rootScope.toggleSettings = function(){
+        if($location.path() == "/settings"){
+            if($rootScope.lastPath == "/settings"){
+                $location.path("/");
+            } else {
+                $location.path($rootScope.lastPath);
+            }
+        } else {
+            $rootScope.lastPath = $location.path();
+            $location.path("/settings");
+        }
     };
     $http.get("/api/login").then(function(response){
         $rootScope.user.loggedIn = response.data.loggedIn;

@@ -7,35 +7,34 @@ from django.db import migrations, models
 def insert_settings(apps, schema_editor):
     # autoclose settings
     Setting = apps.get_model("GarageWarden", "Setting")
-    Setting(key="autoclose.minutes", value="20", type="N",
-            description="The time in minutes to wait before automatically closing the garage").save()
-    Setting(key="autoclose.enabled", value="True", type="B",
+    Setting(key="autoclose.enabled", value="True", type="B", order=10,
             description="Whether autoclose is enabled or not").save()
-    Setting(key="autoclose.notification_enabled", value="True", type="B",
-            description="Whether emails for auto close are enabled").save()
+    Setting(key="autoclose.notification_enabled", value="True", type="B", order=20,
+            description="Whether emails for auto close are enabled (requires all emails to be enabled)").save()
+    Setting(key="autoclose.minutes", value="20", type="N", order=30,
+            description="The time in minutes to wait before automatically closing the garage").save()
+
     # email settings
-    Setting(key="email.enabled", value="False", type="B",
+    Setting(key="email.enabled", value="False", type="B", order=40,
             description="Whether all email is enabled or not").save()
-    Setting(key="email.status_notification_enabled", value="True", type="B",
+    Setting(key="email.status_notification_enabled", value="True", type="B", order=50,
             description="Whether status emails (open and close) are enabled").save()
-    Setting(key="email.host", value="smtp.gmail.com", type="S",
+    Setting(key="email.host", value="smtp.gmail.com", type="S", order=60,
             description="The host to use to send email via smtp").save()
-    Setting(key="email.port", value="465", type="N",
+    Setting(key="email.port", value="465", type="N", order=70,
             description="The port to use for connecting to the smtp host").save()
-    Setting(key="email.encryption", value="ssl", type="S",
+    Setting(key="email.encryption", value="ssl", type="S", order=80,
             description="The encryption type to use to connect to the smtp server.\n"
                         "Acceptable values: ssl, tls, none").save()
-    Setting(key="email.username", value="fake.email@fakedomain.com", type="S",
+    Setting(key="email.username", value="fake.email@fakedomain.com", type="S", order=90,
             description="The username to connect to the smtp server with").save()
-    Setting(key="email.password", value="sneaky_ninja_password", type="S",
+    Setting(key="email.password", value="sneaky_ninja_password", type="S", order=100,
             description="The password to connect to the smtp server with").save()
-    Setting(key="email.recipients", value="example1@email.com, example2@email.com", type="S",
-            description="The list of recipients to notify when stuff happens\n"
-            "This is a comma (,) delimited list of email addresses to use for notification\n"
-            "If you want to get text messages, you can use your phone carriers sms gateway to get texts via email\n"
-            "There is a pretty extensive list at http://www.opentextingonline.com/emailtotext.aspx\n"
-            "If you can't find your carrier on there, you can try searching google or contacting your carrier").save()
-    Setting(key="email.from_name", value="GarageWarden", type="S", description="The from name for notifications").save()
+    Setting(key="email.recipients", value="example1@email.com, example2@email.com", type="S", order=110,
+            description="The list of recipients to notify when stuff happens. \n"
+            "This is a comma (,) delimited list of email addresses to use for notification").save()
+    Setting(key="email.from_name", value="GarageWarden", type="S", order=120,
+            description="The from name for notifications").save()
 
 
 class Migration(migrations.Migration):
