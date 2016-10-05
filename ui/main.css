@@ -10,10 +10,10 @@
 
 .logoutbutton{
     position: absolute;
-    top: 16px;
+    top: 70px;
     width: 70px;
     height: 52px;
-    right: 10px;
+    left: 10px;
 }
 
 .activate-button{
@@ -40,10 +40,33 @@
 }
 
 .settings_button {
-    font-size: 4em !important;
+    font-size: 3em !important;
     position: absolute;
-    top: 14px;
+    top: 16px;
+    padding: 5px 0 0;
     left: 10px;
+    width: 70px;
+    height: 52px;
+}
+
+.settings_button:hover {
+    color: #b2d4b7;
+    background-color: #e6e6e6;
+    border-color: #adadad;
+}
+
+.btn-default:focus {
+    color: #b2d4b7;
+    background-color: #e6e6e6;
+    border-color: #8c8c8c;
+}
+
+.bitchin-logo {
+    height: 120px;
+}
+
+.settings_button i{
+    vertical-align: top;
 }
 
 .settings_selected {
