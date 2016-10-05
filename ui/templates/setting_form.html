@@ -3,6 +3,6 @@
     <label ng-class="{setting_checkbox_label_bool: setting.type=='B' }">
         {{ setting.description }}</label>
         <input class="form-control setting_checkbox" ng-switch-when="B" type="checkbox"
-               ng-model="setting.value" ng-true-value="'True'" ng-false-value="'False'" ng-change="markDirty(setting)"/>
+               ng-model="setting.value" ng-true-value="'True'" ng-false-value="'False'" ng-checked="setting.value == 'True'" ng-change="markDirty(setting)"/>
         <input class="form-control" ng-switch-default type="text" ng-model="setting.value" ng-change="markDirty(setting)"/>
 </div>
