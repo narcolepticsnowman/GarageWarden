@@ -30,6 +30,11 @@
     height: 32px;
 }
 
+.settings_text {
+    width: 95%;
+    display: inline-block;
+}
+
 .setting_checkbox_label_bool {
     vertical-align: middle;
     height: 40px;
@@ -47,6 +52,7 @@
     left: 10px;
     width: 70px;
     height: 52px;
+    outline: none;
 }
 
 .settings_button:hover {
@@ -70,5 +76,23 @@
 }
 
 .settings_selected {
-    color: #b2d4b7
+    color: #b2d4b7;
+    background-color: #e6e6e6;
+    border-color: #8c8c8c;
+}
+
+.settings_save {
+    margin-right: 5px;
+}
+
+.settings_tabs {
+    text-align: center;
+}
+
+.settings_tabs .nav {
+    padding-left: 5px;
+}
+
+.settings_tabs .nav, .settings_tabs h2{
+    text-transform: capitalize;
 }

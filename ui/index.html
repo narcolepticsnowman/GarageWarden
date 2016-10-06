@@ -25,10 +25,11 @@
             <div class="panel panel-default">
                 <div class="panel-heading gw-header">
                     <img class="bitchin-logo" src="gw_logo.png">
-                    <button class="settings_button btn btn-default"
-                       ng-class="{settings_selected: currentPath()=='/settings'}"
-                       ng-click="toggleSettings()"><i ng-if="user.loggedIn" class="fa fa-cog "></i></button>
-                    <button ng-if="user.loggedIn" class="btn btn-default logoutbutton" ng-click="logout()">Logout</button>
+                    <div id="settings_button" class="settings_button btn btn-default ng-cloak"
+                       ng-class="{settings_selected: currentPath()=='/settings'}" ng-if="user.loggedIn"
+                       ng-click="toggleSettings()"><i class="fa fa-cog "></i></div>
+                    <button ng-if="user.loggedIn" class="btn btn-default logoutbutton ng-cloak"
+                            ng-click="logout()">Logout</button>
                 </div>
                 <ng-view class="panel-body">
 

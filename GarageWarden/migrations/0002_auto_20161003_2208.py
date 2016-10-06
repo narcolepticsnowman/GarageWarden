@@ -9,7 +9,7 @@ def insert_settings(apps, schema_editor):
     Setting = apps.get_model("GarageWarden", "Setting")
     Setting(key="autoclose.enabled", value="True", type="B", order=10,
             description="Whether autoclose is enabled or not").save()
-    Setting(key="autoclose.notification_enabled", value="True", type="B", order=20,
+    Setting(key="autoclose.notification enabled", value="True", type="B", order=20,
             description="Whether emails for auto close are enabled (requires all emails to be enabled)").save()
     Setting(key="autoclose.minutes", value="20", type="N", order=30,
             description="The time in minutes to wait before automatically closing the garage").save()
@@ -17,7 +17,7 @@ def insert_settings(apps, schema_editor):
     # email settings
     Setting(key="email.enabled", value="False", type="B", order=40,
             description="Whether all email is enabled or not").save()
-    Setting(key="email.status_notification_enabled", value="True", type="B", order=50,
+    Setting(key="email.Status Notification", value="True", type="B", order=50,
             description="Whether status emails (open and close) are enabled").save()
     Setting(key="email.host", value="smtp.gmail.com", type="S", order=60,
             description="The host to use to send email via smtp").save()
@@ -27,13 +27,13 @@ def insert_settings(apps, schema_editor):
             description="The encryption type to use to connect to the smtp server.\n"
                         "Acceptable values: ssl, tls, none").save()
     Setting(key="email.username", value="fake.email@fakedomain.com", type="S", order=90,
-            description="The username to connect to the smtp server with").save()
+            description="The username to connect to the smtp server").save()
     Setting(key="email.password", value="sneaky_ninja_password", type="S", order=100,
-            description="The password to connect to the smtp server with").save()
+            description="The password to connect to the smtp server").save()
     Setting(key="email.recipients", value="example1@email.com, example2@email.com", type="S", order=110,
             description="The list of recipients to notify when stuff happens. \n"
             "This is a comma (,) delimited list of email addresses to use for notification").save()
-    Setting(key="email.from_name", value="GarageWarden", type="S", order=120,
+    Setting(key="email.from name", value="GarageWarden", type="S", order=120,
             description="The from name for notifications").save()
 
 

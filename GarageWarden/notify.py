@@ -38,7 +38,7 @@ def send_mail(subject, text, html=None):
     if settings['username'] and settings['password']:
         smtp.login(settings['username'], settings['password'])
 
-    _from = settings['from'] or 'GarageWarden'
+    _from = settings['from name'] or 'GarageWarden'
     recipients = settings['recipients']
     msg = MIMEMultipart("alternative")
     msg['Subject'] = subject
@@ -52,7 +52,7 @@ def send_mail(subject, text, html=None):
 
 
 def send_state_change_mail(state, color, date):
-    if settings['status_notification_enabled']:
+    if settings['Status Notification']:
         send_mail("Garage " + state, make_text(state, date), make_html(state, color, date))
     else:
         print('status emails not enabled')

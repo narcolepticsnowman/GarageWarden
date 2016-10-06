@@ -152,10 +152,10 @@ app.controller('settingsController', ['$scope', '$http', function($scope, $http)
         });
         $http.post("/api/settings", settings).then(function(){
             $scope.dirty = {};
+            alert("Settings Saved!");
             $scope.toggleSettings();
         }, function(response){
-            $scope.failed=true;
-            $scope.error = response.data;
+            alert("Failed to save settings.\n" + response.data);
         });
     }
 }]);

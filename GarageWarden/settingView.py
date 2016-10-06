@@ -43,7 +43,14 @@ class SettingView(login.AuthorizedMixin, View):
         setting = setting.get()
         if setting.type == "B" and input["value"] not in ["True", "False"]:
             raise AssertionError("Value for boolean setting must be True or False for key:"+setting.key)
-        if setting.type == "N" and not input["value"].replace(".", "", 1).isDigit():
-            return self.make_bad_request("Value for number setting must be a valid number for key:"+setting.key)
+        if setting.type == "N" and not self.is_float(input["value"]):
+            raise AssertionError("Value for number setting must be a valid number for key:"+setting.key)
         setting.value = input['value']
         return setting
+
+    def is_float(self, string):
+        try:
+            float(string)
+            return True
+        except ValueError as e:
+            return False

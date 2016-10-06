@@ -24,7 +24,7 @@ config.state_change_callbacks['autoclose'] = state_change
 def notify_before_close():
     global timer
     if not status.garage_is_full_close():
-        if settingHelper.value("autoclose.notification_enabled"):
+        if settingHelper.value("autoclose.notification enabled"):
             notify.send_mail("Closing garage in 30 seconds", "The garage door will automatically close in 30 seconds")
         # make sure to stop the timer before re-assigning it so we don't leave any threads running
         stop_timer()
@@ -35,7 +35,7 @@ def notify_before_close():
 def do_close():
     if not status.garage_is_full_close():
         stop_timer()
-        if settingHelper.value("autoclose.notification_enabled"):
+        if settingHelper.value("autoclose.notification enabled"):
             notify.send_mail("Closing garage door", "The garage is automatically closing now.")
         control.trigger_door()
 
