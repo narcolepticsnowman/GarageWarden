@@ -19,14 +19,13 @@ settingView.reload_methods['notify'] = reload_config
 
 
 def send_mail(subject, text, html=None):
-    if not settings_loaded:
-        reload_config()
-    if not settings['enabled']:
+    
+    if not get_setting('enabled'):
         print('email not enabled')
         return
-    encryption = (settings['encryption'] or '').lower()
-    host = settings['host']
-    port = settings['port']
+    encryption = (get_setting('encryption') or '').lower()
+    host = get_setting('host')
+    port = int(get_setting('port'))
     if encryption == 'ssl':
         smtp = smtplib.SMTP_SSL(host=host, port=port)
     else:
@@ -35,11 +34,11 @@ def send_mail(subject, text, html=None):
     if encryption == 'tls':
         smtp.starttls()
 
-    if settings['username'] and settings['password']:
-        smtp.login(settings['username'], settings['password'])
+    if get_setting('username') and get_setting('password'):
+        smtp.login(get_setting('username'), get_setting('password'))
 
-    _from = settings['from name'] or 'GarageWarden'
-    recipients = settings['recipients']
+    _from = get_setting('from name') or 'GarageWarden'
+    recipients = get_setting('recipients')
     msg = MIMEMultipart("alternative")
     msg['Subject'] = subject
     msg['From'] = _from
@@ -52,7 +51,7 @@ def send_mail(subject, text, html=None):
 
 
 def send_state_change_mail(state, color, date):
-    if settings['Status Notification']:
+    if get_setting('Status Notification'):
         send_mail("Garage " + state, make_text(state, date), make_html(state, color, date))
     else:
         print('status emails not enabled')
@@ -83,8 +82,15 @@ config.state_change_callbacks['notify'] = state_change
 
 
 def test_email(request):
+    global settings
     print('sending test emails')
-    if not settings['enabled']:
+    if not get_setting('enabled'):
         return HttpResponse("Email not enabled")
     send_state_change_mail("Test", "#5bc0de", datetime.now().strftime("%d-%b-%Y %H:%M:%S"))
     return HttpResponse("Test email sent")
+
+
+def get_setting(setting):
+    if not settings_loaded:
+        reload_config()
+    return settings[setting]
