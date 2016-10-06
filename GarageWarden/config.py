@@ -27,6 +27,9 @@ class Config(AppConfig):
                                   bouncetime=settings.SWITCH_PIN_DEBOUNCE_TIME)
             GPIO.add_event_detect(settings.FULL_OPEN_SWITCH_PIN, GPIO.BOTH, callback=self.callback,
                                   bouncetime=settings.SWITCH_PIN_DEBOUNCE_TIME)
+            # import this here so django does't explode
+            from GarageWarden.autoclose import state_change
+            state_change_callbacks['autoclose'] = state_change
             print("Setup complete")
 
     def callback(self, channel):

@@ -1,4 +1,4 @@
-from GarageWarden import config, status, control, notify, settingHelper
+from GarageWarden import status, control, notify, settingHelper
 from threading import Timer
 
 timer = None
@@ -17,8 +17,6 @@ def state_change():
         print("starting autoclose countdown")
         timer = Timer((settingHelper.value("autoclose.minutes") * 60) - 30, notify_before_close)
         timer.start()
-
-config.state_change_callbacks['autoclose'] = state_change
 
 
 def notify_before_close():
