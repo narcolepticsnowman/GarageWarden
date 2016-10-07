@@ -19,8 +19,9 @@ class Config(AppConfig):
             GPIO.setwarnings(False)
             GPIO.setmode(GPIO.BCM)
             GPIO.setup(settings.GARAGE_RELAY_PIN, GPIO.OUT)
-            GPIO.setup(settings.FULL_CLOSE_SWITCH_PIN, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-            GPIO.setup(settings.FULL_OPEN_SWITCH_PIN, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+            GPIO.setup(settings.FULL_CLOSE_SWITCH_PIN, GPIO.IN)
+            GPIO.setup(settings.FULL_OPEN_SWITCH_PIN, GPIO.IN)
+            GPIO.setup(settings.BEEPER_PIN, GPIO.OUT)
             print("Adding callbacks for notification")
             # We detect both because we need to know both sides of state change
             GPIO.add_event_detect(settings.FULL_CLOSE_SWITCH_PIN, GPIO.BOTH, callback=self.callback,

@@ -3,7 +3,8 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from datetime import datetime
 from django.http import HttpResponse
-from GarageWarden import status, settingHelper, settingView, config
+from GarageWarden import status, settingHelper, settingView, config, settings as gw_settings
+import RPi.GPIO as GPIO
 
 settings = None
 settings_loaded = False
@@ -94,3 +95,11 @@ def get_setting(setting):
     if not settings_loaded:
         reload_config()
     return settings[setting]
+
+
+def start_beep():
+    GPIO.output(gw_settings.BEEPER_PIN, True)
+
+
+def stop_beep():
+    GPIO.output(gw_settings.BEEPER_PIN, False)
