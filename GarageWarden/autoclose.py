@@ -48,6 +48,10 @@ def close():
     # cleanup after we're done whether we closed it or it was already closed
     stop_timer()
 
+    # There's an edge case where the garage gets stuck operating, so we'll execute the state change manually after two
+    # minutes to make sure it's not open still. This way we can just keep executing this until the door is really closed
+    Timer(120, state_change)
+
 
 def stop_timer():
     print("stopping autoclose")
