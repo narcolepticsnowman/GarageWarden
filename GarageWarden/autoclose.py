@@ -1,14 +1,18 @@
 from GarageWarden import status, control, notify, settingHelper
-from threading import Timer
+from threading import Timer, Lock
 import time
 
 timer = None
+timer_lock = Lock()
 
 
 def state_change():
     if not settingHelper.value("autoclose.enabled"):
         return
     global timer
+    got_lock = timer_lock.acquire()
+    if not got_lock:
+        return
     if not status.garage_is_full_close():
         if not timer:
             print("starting autoclose countdown")
@@ -17,6 +21,8 @@ def state_change():
     else:
         # it's closed now, so we can stop waiting
         stop_timer()
+    if got_lock:
+        timer_lock.release()
 
 
 def close():
