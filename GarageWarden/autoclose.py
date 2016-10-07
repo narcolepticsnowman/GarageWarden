@@ -25,7 +25,7 @@ def close():
         if settingHelper.value("autoclose.notification enabled"):
             notify.send_mail("Auto-Closing garage in 30 seconds", "The garage door will close in 30 seconds")
         # just sleep since we're on an async thread anyway
-        time.sleep(10)
+        time.sleep(15)
         count = 0
         while count < 15:
             count += 1
