@@ -12,14 +12,14 @@ def state_change():
     if not status.garage_is_full_close():
         if not timer:
             print("starting autoclose countdown")
-            timer = Timer((settingHelper.value("autoclose.minutes") * 60) - 30, notify_before_close)
+            timer = Timer((settingHelper.value("autoclose.minutes") * 60) - 30, close)
             timer.start()
     else:
         # it's closed now, so we can stop waiting
         stop_timer()
 
 
-def notify_before_close():
+def close():
     global timer
     if not status.garage_is_full_close():
         if settingHelper.value("autoclose.notification enabled"):
@@ -33,15 +33,11 @@ def notify_before_close():
             time.sleep(.5)
             notify.stop_beep()
             time.sleep(.3)
-        do_close()
-
-
-def do_close():
-    if not status.garage_is_full_close():
-        stop_timer()
+        control.trigger_door()
         if settingHelper.value("autoclose.notification enabled"):
             notify.send_mail("Auto-Closing garage door", "The garage was closed")
-        control.trigger_door()
+    # cleanup after we're done whether we closed it or it was already closed
+    stop_timer()
 
 
 def stop_timer():
