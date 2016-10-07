@@ -34,14 +34,17 @@ def close():
         time.sleep(15)
         count = 0
         while count < 15:
+            if status.garage_is_full_close():
+                break
             count += 1
             notify.start_beep()
             time.sleep(.75)
             notify.stop_beep()
             time.sleep(.25)
-        control.trigger_door()
-        if settingHelper.value("autoclose.notification enabled"):
-            notify.send_mail("Auto-Closing garage door", "The garage was closed")
+        if not status.garage_is_full_close():
+            control.trigger_door()
+            if settingHelper.value("autoclose.notification enabled"):
+                notify.send_mail("Auto-Closing garage door", "The garage was closed")
     # cleanup after we're done whether we closed it or it was already closed
     stop_timer()
 
