@@ -1,7 +1,2 @@
-Add push notification to phone/hangouts/email something to alert when garage door opens or closes
-Add timer function to shut garage if left in open state for too long
-Add notification that door will close in 30 seconds when auto closing
-Add ability to enable/disable timer
-Add UI to change time to shut garage when left open
 Add ability to put the timer to sleep for several hours, so I don't have to remember to turn it back on
 Create tutorial for setting this shiz up (including parts list)
